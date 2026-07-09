@@ -1,3 +1,7 @@
+/**
+ * Filament master data — edit this list to match stock on hand.
+ * Users can only pick colors defined here (id, name, hex).
+ */
 import type { Filament } from "@/lib/types"
 
 export const FILAMENTS: Filament[] = [
