@@ -44,7 +44,7 @@ Single page:
 
 ### Count
 
-- Start with one empty keycap (or empty set + add).
+- On load: one blank keycap, already selected.
 - Add/remove keys one at a time (customize per key, not fixed pack sizes).
 
 ### Colors (filament master data)
@@ -62,8 +62,8 @@ Single page:
 
 Per key, choose one:
 
-- **Icon** — from Lucide (start with Lucide/Heroicons-style library; curate later if needed).
-- **Character** — A–Z (uppercase) or 0–9.
+- **Icon** — from Lucide React (full library in v1; curate a subset later if needed).
+- **Character** — A–Z (uppercase only) or 0–9.
 
 Keys may have no legend (blank).
 
@@ -136,7 +136,7 @@ No server required for export.
 
 ## UI flow
 
-1. Open page → one blank keycap selected (or empty + prompt to add).
+1. Open page → one blank keycap selected.
 2. Choose mode 1/2 → pick filament A (and B).
 3. Add keys as needed → colors follow mode rules.
 4. Select a key → choose legend type → pick icon or character; optionally override color.
