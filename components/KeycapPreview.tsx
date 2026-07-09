@@ -1,102 +1,25 @@
 "use client"
 
-import type { LucideIcon } from "lucide-react"
-import {
-  ArrowDown,
-  ArrowLeft,
-  ArrowRight,
-  ArrowUp,
-  Battery,
-  Eraser,
-  Bluetooth,
-  Camera,
-  Check,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp,
-  Command,
-  CornerDownLeft,
-  Delete,
-  Heart,
-  Home,
-  Menu,
-  Mic,
-  MicOff,
-  Minus,
-  Moon,
-  Music,
-  Option,
-  Pause,
-  Play,
-  Plus,
-  Power,
-  Search,
-  Settings,
-  SkipBack,
-  SkipForward,
-  Space,
-  Star,
-  Sun,
-  Volume2,
-  VolumeX,
-  Wifi,
-  X,
-} from "lucide-react"
-import { legendInkForHex } from "@/lib/colors"
-import { resolveFilamentHex } from "@/lib/filaments"
-import type { Keycap } from "@/lib/types"
-
-const ICONS: Record<string, LucideIcon> = {
-  ArrowUp,
-  ArrowDown,
-  ArrowLeft,
-  ArrowRight,
-  ChevronUp,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  CornerDownLeft,
-  Delete,
-  Eraser,
-  Space,
-  Command,
-  Option,
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  Volume2,
-  VolumeX,
-  Mic,
-  MicOff,
-  Sun,
-  Moon,
-  Power,
-  Home,
-  Search,
-  Settings,
-  Menu,
-  Plus,
-  Minus,
-  X,
-  Check,
-  Star,
-  Heart,
-  Music,
-  Camera,
-  Bluetooth,
-  Wifi,
-  Battery,
-}
+import { resolveKeycapLayers } from "@/lib/colors"
+import { getIconComponent } from "@/lib/icon-registry"
+import type { ColorMode, Keycap } from "@/lib/types"
 
 type Props = {
   keycaps: Keycap[]
   selectedKeycapId: string | null
   onSelect: (id: string) => void
+  mode: ColorMode
+  colorAId: string
+  colorBId: string | null
 }
 
-function LegendView({ keycap, ink }: { keycap: Keycap; ink: string }) {
+function LegendView({
+  keycap,
+  ink,
+}: {
+  keycap: Keycap
+  ink: string
+}) {
   if (!keycap.legendType || !keycap.legendValue) return null
   if (keycap.legendType === "char") {
     return (
@@ -105,7 +28,7 @@ function LegendView({ keycap, ink }: { keycap: Keycap; ink: string }) {
       </span>
     )
   }
-  const Icon = ICONS[keycap.legendValue]
+  const Icon = getIconComponent(keycap.legendValue)
   if (!Icon) {
     return (
       <span className="text-[10px]" style={{ color: ink }}>
@@ -113,32 +36,46 @@ function LegendView({ keycap, ink }: { keycap: Keycap; ink: string }) {
       </span>
     )
   }
-  return <Icon size={28} color={ink} strokeWidth={2.25} />
+  return <Icon size={26} color={ink} strokeWidth={2.25} />
 }
 
 export function KeycapPreview({
   keycaps,
   selectedKeycapId,
   onSelect,
+  mode,
+  colorAId,
+  colorBId,
 }: Props) {
   return (
-    <div className="flex flex-wrap gap-3 rounded-xl border border-neutral-200 bg-neutral-50 p-4">
+    <div className="flex flex-wrap content-start justify-center gap-3">
       {keycaps.map((key) => {
-        const fill = resolveFilamentHex(key.colorId)
-        const ink = legendInkForHex(fill)
+        const layers = resolveKeycapLayers(
+          mode,
+          key.colorId,
+          colorAId,
+          colorBId,
+        )
         const selected = key.id === selectedKeycapId
         return (
           <button
             key={key.id}
             type="button"
             onClick={() => onSelect(key.id)}
-            className={`flex h-16 w-16 items-center justify-center rounded-xl border-2 shadow-sm ${
+            className={`relative flex h-[72px] w-[72px] items-center justify-center rounded-[14px] border-2 shadow-sm ${
               selected ? "border-sky-500 ring-2 ring-sky-200" : "border-black/10"
             }`}
-            style={{ backgroundColor: fill }}
+            style={{ backgroundColor: layers.capHex }}
             aria-pressed={selected}
+            title="Cap / Lid / Legend"
           >
-            <LegendView keycap={key} ink={ink} />
+            {/* Lid (ฝา) */}
+            <span
+              className="absolute inset-[8px] flex items-center justify-center rounded-[10px] border border-black/10 shadow-inner"
+              style={{ backgroundColor: layers.lidHex }}
+            >
+              <LegendView keycap={key} ink={layers.legendHex} />
+            </span>
           </button>
         )
       })}

@@ -1,4 +1,5 @@
-import type { Keycap } from "@/lib/types"
+import { resolveFilamentHex } from "@/lib/filaments"
+import type { ColorMode, Keycap } from "@/lib/types"
 
 export function alternateColorId(
   index: number,
@@ -19,6 +20,15 @@ export function reapplyAlternateColors(
   }))
 }
 
+/** Cap A → other is B, Cap B → other is A */
+export function oppositeColorId(
+  capColorId: string,
+  colorAId: string,
+  colorBId: string,
+): string {
+  return capColorId === colorAId ? colorBId : colorAId
+}
+
 /** Relative luminance 0–1 from #RRGGBB */
 function luminance(hex: string): number {
   const h = hex.replace("#", "")
@@ -32,4 +42,43 @@ function luminance(hex: string): number {
 
 export function legendInkForHex(hex: string): string {
   return luminance(hex) < 0.45 ? "#FFFFFF" : "#111111"
+}
+
+export type KeycapLayerColors = {
+  /** Base / stem / "ตูด" */
+  capHex: string
+  /** Top cover / "ฝา" */
+  lidHex: string
+  /** Character or icon on the lid */
+  legendHex: string
+}
+
+/**
+ * Two-color: Cap A → Lid B → Legend A (and Cap B → Lid A → Legend B).
+ * One-color: Cap + Lid same filament; legend auto-contrasts on the lid.
+ */
+export function resolveKeycapLayers(
+  mode: ColorMode,
+  capColorId: string,
+  colorAId: string,
+  colorBId: string | null,
+): KeycapLayerColors {
+  const capHex = resolveFilamentHex(capColorId)
+
+  if (mode === "two" && colorBId) {
+    const lidHex = resolveFilamentHex(
+      oppositeColorId(capColorId, colorAId, colorBId),
+    )
+    return {
+      capHex,
+      lidHex,
+      legendHex: capHex,
+    }
+  }
+
+  return {
+    capHex,
+    lidHex: capHex,
+    legendHex: legendInkForHex(capHex),
+  }
 }

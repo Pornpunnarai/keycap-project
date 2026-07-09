@@ -1,5 +1,5 @@
 import { buildSetSvg } from "@/lib/svg"
-import type { Keycap } from "@/lib/types"
+import type { ColorMode, Keycap } from "@/lib/types"
 
 function downloadBlob(filename: string, blob: Blob) {
   const url = URL.createObjectURL(blob)
@@ -10,17 +10,28 @@ function downloadBlob(filename: string, blob: Blob) {
   URL.revokeObjectURL(url)
 }
 
-export function downloadSetSvg(keycaps: Keycap[], filename = "keycap-set.svg") {
-  const svg = buildSetSvg(keycaps)
+type ExportOptions = {
+  mode: ColorMode
+  colorAId: string
+  colorBId: string | null
+}
+
+export function downloadSetSvg(
+  keycaps: Keycap[],
+  options: ExportOptions,
+  filename = "keycap-set.svg",
+) {
+  const svg = buildSetSvg(keycaps, options)
   downloadBlob(filename, new Blob([svg], { type: "image/svg+xml;charset=utf-8" }))
 }
 
 export async function downloadSetPng(
   keycaps: Keycap[],
+  options: ExportOptions,
   filename = "keycap-set.png",
   scale = 2,
 ): Promise<void> {
-  const svg = buildSetSvg(keycaps)
+  const svg = buildSetSvg(keycaps, options)
   const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" })
   const url = URL.createObjectURL(blob)
   try {
