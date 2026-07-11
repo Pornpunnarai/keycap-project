@@ -90,7 +90,7 @@ Selected keycap border/ring uses the same selected cyan pastel tokens as legend 
 
 ### Out of scope files
 
-- `components/FilamentPicker.tsx` — swatches remain filament hex; selection ring may optionally align to `--btn-selected-*` only if trivial; do not recolor the swatch fills.
+- `components/FilamentPicker.tsx` — leave as-is (swatch fills are filament hex; selection ring stays current sky styles).
 - `app/page.tsx`, `components/Configurator.tsx` — no layout changes.
 
 ## Behavior constraints
