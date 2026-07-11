@@ -49,14 +49,14 @@ export function KeycapControls({
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
-          className="rounded bg-neutral-900 px-3 py-1.5 text-sm text-white"
+          className="btn btn-primary"
           onClick={onAdd}
         >
           + Add key
         </button>
         <button
           type="button"
-          className="rounded border border-neutral-300 px-3 py-1.5 text-sm disabled:opacity-40"
+          className="btn btn-secondary disabled:opacity-40"
           onClick={onRemove}
           disabled={state.keycaps.length <= 1}
         >
@@ -64,7 +64,7 @@ export function KeycapControls({
         </button>
         <button
           type="button"
-          className="rounded border border-red-300 bg-red-50 px-3 py-1.5 text-sm text-red-800"
+          className="btn btn-danger"
           onClick={onClear}
         >
           Clear
@@ -76,7 +76,7 @@ export function KeycapControls({
           <button
             key={mode}
             type="button"
-            className={`rounded border px-3 py-1.5 ${state.mode === mode ? "bg-neutral-900 text-white" : "bg-white"}`}
+            className={`btn ${state.mode === mode ? "btn-primary" : ""}`}
             onClick={() => setMode(mode)}
           >
             {mode === "one" ? "1 color" : "2 colors"}
@@ -131,7 +131,7 @@ export function KeycapControls({
 
       <button
         type="button"
-        className="rounded border border-neutral-300 bg-white px-3 py-1.5 text-sm disabled:opacity-40"
+        className="btn btn-secondary disabled:opacity-40"
         disabled={state.mode !== "two" || !state.colorBId}
         onClick={() => {
           if (!state.colorBId) return
@@ -153,7 +153,7 @@ export function KeycapControls({
 
       <button
         type="button"
-        className="rounded border border-amber-500 bg-amber-50 px-3 py-1.5 text-left text-sm text-amber-950 disabled:opacity-40"
+        className="btn btn-accent text-left disabled:opacity-40"
         disabled={!canReapply}
         onClick={() => {
           if (!state.colorBId) return
@@ -164,7 +164,7 @@ export function KeycapControls({
         }}
       >
         Re-apply alternate
-        <span className="mt-0.5 block text-xs font-normal text-amber-800">
+        <span className="mt-0.5 block text-xs font-normal opacity-80">
           Cap colors follow A/B by order.
         </span>
       </button>
@@ -190,7 +190,7 @@ export function KeycapControls({
       <div className="mt-auto flex flex-col gap-2 border-t border-neutral-100 pt-3">
         <button
           type="button"
-          className="rounded bg-sky-600 px-3 py-1.5 text-sm text-white disabled:opacity-40"
+          className="btn btn-export disabled:opacity-40"
           disabled={!canExport}
           onClick={() => downloadSetSvg(state.keycaps, exportOptions)}
         >
@@ -198,7 +198,7 @@ export function KeycapControls({
         </button>
         <button
           type="button"
-          className="rounded bg-sky-600 px-3 py-1.5 text-sm text-white disabled:opacity-40"
+          className="btn btn-export disabled:opacity-40"
           disabled={!canExport}
           onClick={() => void downloadSetPng(state.keycaps, exportOptions)}
         >
