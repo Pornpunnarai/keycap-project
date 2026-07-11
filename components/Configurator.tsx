@@ -53,7 +53,7 @@ export function Configurator() {
         </aside>
 
         {/* Center canvas */}
-        <section className="flex min-h-[280px] min-w-0 flex-1 flex-col rounded-xl border border-neutral-200 bg-[linear-gradient(45deg,#f4f4f5_25%,transparent_25%),linear-gradient(-45deg,#f4f4f5_25%,transparent_25%),linear-gradient(45deg,transparent_75%,#f4f4f5_75%),linear-gradient(-45deg,transparent_75%,#f4f4f5_75%)] bg-[length:20px_20px] bg-[position:0_0,0_10px,10px_-10px,-10px_0] p-4 lg:overflow-auto">
+        <section className="wood-surface flex min-h-[280px] min-w-0 flex-1 flex-col rounded-xl border border-neutral-200 p-4 lg:overflow-auto">
           <div className="mb-3 flex items-center justify-between gap-2">
             <span className="text-xs font-medium uppercase tracking-wide text-neutral-500">
               Canvas
