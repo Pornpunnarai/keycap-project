@@ -13,10 +13,10 @@ type Props = {
 }
 
 const tileClass = (selected: boolean, disabled?: boolean) =>
-  `flex h-9 w-9 items-center justify-center rounded-lg border-2 text-sm font-semibold transition ${
+  `flex h-9 w-9 items-center justify-center rounded-lg text-sm font-semibold transition ${
     selected
-      ? "border-sky-500 bg-sky-50 ring-2 ring-sky-200"
-      : "border-black/10 bg-white hover:border-black/25"
+      ? "btn-selected"
+      : "border-2 border-black/10 bg-white hover:border-black/25"
   } ${disabled ? "pointer-events-none opacity-40" : ""}`
 
 export function LegendPicker({
