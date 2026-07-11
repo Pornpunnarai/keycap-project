@@ -62,8 +62,10 @@ export function KeycapPreview({
             key={key.id}
             type="button"
             onClick={() => onSelect(key.id)}
-            className={`relative flex h-[72px] w-[72px] items-center justify-center rounded-[14px] border-2 shadow-sm ${
-              selected ? "border-sky-500 ring-2 ring-sky-200" : "border-black/10"
+            className={`relative flex h-[72px] w-[72px] items-center justify-center rounded-[14px] shadow-sm ${
+              selected
+                ? "border-2 border-[var(--btn-selected-border)] ring-2 ring-[var(--btn-selected-ring)]"
+                : "border-2 border-black/10"
             }`}
             style={{ backgroundColor: layers.capHex }}
             aria-pressed={selected}
