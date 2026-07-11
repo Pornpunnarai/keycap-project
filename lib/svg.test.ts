@@ -68,4 +68,17 @@ describe("buildSetSvg", () => {
     })
     expect(svg.startsWith("<svg")).toBe(true)
   })
+
+  it("includes wood background and depth defs for dimensional export", () => {
+    const svg = buildSetSvg(keys, {
+      mode: "one",
+      colorAId: "pla-red",
+      colorBId: "pla-black",
+    })
+    expect(svg).toContain('id="wood"')
+    expect(svg).toContain('id="keyShadow"')
+    expect(svg).toContain('id="capHighlight"')
+    expect(svg).toContain('fill="url(#wood)"')
+    expect(svg).toContain('filter="url(#keyShadow)"')
+  })
 })
