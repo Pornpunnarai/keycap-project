@@ -19,10 +19,10 @@ export function Configurator() {
     <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-4 px-3 py-4 lg:h-screen lg:gap-0 lg:px-4 lg:py-4">
       <header className="shrink-0 px-1 pb-2 lg:pb-3">
         <h1 className="text-xl font-semibold tracking-tight text-neutral-900 lg:text-2xl">
-          Keycap configurator
+          ตัวจัดชุดคีย์แคป
         </h1>
         <p className="text-sm text-neutral-600">
-          Left: colors · Center: canvas · Right: characters & icons
+          ซ้าย: สี · กลาง: แคนวาส · ขวา: ตัวอักษรและไอคอน
         </p>
       </header>
 
@@ -56,11 +56,10 @@ export function Configurator() {
         <section className="wood-surface flex min-h-[280px] min-w-0 flex-1 flex-col rounded-xl border border-neutral-200 p-4 lg:overflow-auto">
           <div className="mb-3 flex items-center justify-between gap-2">
             <span className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-              Canvas
+              แคนวาส
             </span>
             <span className="text-xs text-neutral-500">
-              {state.keycaps.length} key
-              {state.keycaps.length === 1 ? "" : "s"}
+              {state.keycaps.length} คีย์
             </span>
           </div>
           <div className="flex flex-1 items-start justify-center">
