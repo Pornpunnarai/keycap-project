@@ -52,7 +52,7 @@ export function KeycapControls({
           className="btn btn-primary"
           onClick={onAdd}
         >
-          + Add key
+          + เพิ่มคีย์
         </button>
         <button
           type="button"
@@ -60,14 +60,14 @@ export function KeycapControls({
           onClick={onRemove}
           disabled={state.keycaps.length <= 1}
         >
-          Remove
+          ลบ
         </button>
         <button
           type="button"
           className="btn btn-danger"
           onClick={onClear}
         >
-          Clear
+          ล้าง
         </button>
       </div>
 
@@ -79,13 +79,13 @@ export function KeycapControls({
             className={`btn ${state.mode === mode ? "btn-primary" : ""}`}
             onClick={() => setMode(mode)}
           >
-            {mode === "one" ? "1 color" : "2 colors"}
+            {mode === "one" ? "1 สี" : "2 สี"}
           </button>
         ))}
       </div>
 
       <FilamentPicker
-        label="Color A · Cap + Legend"
+        label="สี A · ฐาน + ตัวอักษร"
         value={state.colorAId}
         onChange={(colorAId) =>
           setState((s) => {
@@ -105,7 +105,7 @@ export function KeycapControls({
         }
       />
       <FilamentPicker
-        label="Color B · Lid"
+        label="สี B · ฝา"
         value={state.colorBId ?? ""}
         disabled={state.mode !== "two"}
         onChange={(colorBId) =>
@@ -124,8 +124,7 @@ export function KeycapControls({
 
       {state.mode === "two" && (
         <p className="rounded-lg bg-neutral-50 px-3 py-2 text-xs text-neutral-600">
-          3 layers: Cap (base) A → Lid B → Legend A. Swaps when cap is B.
-          Per-key color is locked.
+          3 ชั้น: ฐาน A → ฝา B → ตัวอักษร A สลับเมื่อฐานเป็น B สีต่อคีย์ถูกล็อก
         </p>
       )}
 
@@ -148,7 +147,7 @@ export function KeycapControls({
           })
         }}
       >
-        Swap A ↔ B
+        สลับ A ↔ B
       </button>
 
       <button
@@ -163,17 +162,17 @@ export function KeycapControls({
           }))
         }}
       >
-        Re-apply alternate
+        จัดสีสลับใหม่
         <span className="mt-0.5 block text-xs font-normal opacity-80">
-          Cap colors follow A/B by order.
+          สีฐานเรียงตามลำดับ A/B
         </span>
       </button>
 
       {selected && state.mode === "one" && (
         <div className="flex flex-col gap-2 border-t border-neutral-100 pt-3">
-          <p className="text-sm font-medium text-neutral-700">Selected key</p>
+          <p className="text-sm font-medium text-neutral-700">คีย์ที่เลือก</p>
           <FilamentPicker
-            label="Key color"
+            label="สีคีย์"
             value={selected.colorId}
             onChange={(colorId) =>
               setState((s) => ({
@@ -194,7 +193,7 @@ export function KeycapControls({
           disabled={!canExport}
           onClick={() => downloadSetSvg(state.keycaps, exportOptions)}
         >
-          Download SVG
+          ดาวน์โหลด SVG
         </button>
         <button
           type="button"
@@ -202,7 +201,7 @@ export function KeycapControls({
           disabled={!canExport}
           onClick={() => void downloadSetPng(state.keycaps, exportOptions)}
         >
-          Download PNG
+          ดาวน์โหลด PNG
         </button>
       </div>
     </div>
