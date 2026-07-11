@@ -62,7 +62,7 @@ export function KeycapPreview({
             key={key.id}
             type="button"
             onClick={() => onSelect(key.id)}
-            className={`relative flex h-[72px] w-[72px] items-center justify-center rounded-[14px] shadow-sm ${
+            className={`keycap-shell relative flex h-[72px] w-[72px] items-center justify-center rounded-[14px] ${
               selected
                 ? "border-2 border-[var(--btn-selected-border)] ring-2 ring-[var(--btn-selected-ring)]"
                 : "border-2 border-black/10"
@@ -71,12 +71,13 @@ export function KeycapPreview({
             aria-pressed={selected}
             title="Cap / Lid / Legend"
           >
-            {/* Lid (ฝา) */}
             <span
-              className="absolute inset-[8px] flex items-center justify-center rounded-[10px] border border-black/10 shadow-inner"
+              className="keycap-lid absolute inset-[8px] flex items-center justify-center rounded-[10px] border border-black/10"
               style={{ backgroundColor: layers.lidHex }}
             >
-              <LegendView keycap={key} ink={layers.legendHex} />
+              <span className="keycap-legend">
+                <LegendView keycap={key} ink={layers.legendHex} />
+              </span>
             </span>
           </button>
         )

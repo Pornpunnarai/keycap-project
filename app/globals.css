@@ -31,6 +31,20 @@
   --btn-selected-fill: #ecfeff;
   --btn-selected-border: #22d3ee;
   --btn-selected-ring: #a5f3fc;
+
+  --keycap-shadow: 2px 4px 10px rgba(0, 0, 0, 0.22),
+    0 1px 2px rgba(0, 0, 0, 0.12);
+  --keycap-highlight: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.34) 0%,
+    rgba(255, 255, 255, 0.08) 38%,
+    rgba(0, 0, 0, 0.08) 100%
+  );
+  --keycap-lid-inset: inset 0 2px 4px rgba(0, 0, 0, 0.18),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.18);
+  --wood-base: #e8dcc8;
+  --wood-grain-a: #d4c4a8;
+  --wood-grain-b: #cbb892;
 }
 
 @theme inline {
@@ -114,4 +128,48 @@ button:disabled,
 [role="button"]:disabled,
 [role="option"]:disabled {
   cursor: not-allowed;
+}
+
+.keycap-shell {
+  box-shadow: var(--keycap-shadow);
+  isolation: isolate;
+}
+
+.keycap-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--keycap-highlight);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.keycap-lid {
+  box-shadow: var(--keycap-lid-inset);
+  z-index: 2;
+}
+
+.keycap-legend {
+  position: relative;
+  z-index: 3;
+}
+
+.wood-surface {
+  background-color: var(--wood-base);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 11px,
+      var(--wood-grain-a) 11px,
+      var(--wood-grain-a) 12px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 7px,
+      color-mix(in srgb, var(--wood-grain-b) 40%, transparent) 7px,
+      color-mix(in srgb, var(--wood-grain-b) 40%, transparent) 8px
+    );
 }
