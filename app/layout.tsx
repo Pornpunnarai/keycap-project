@@ -13,9 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Keycap Configurator",
-  description:
-    "Mock custom keycap sets with filament colors and legends.",
+  title: "ตัวจัดชุดคีย์แคป",
+  description: "จัดชุดคีย์แคปจากสีเส้นใยและตัวอักษรหรือไอคอน",
 };
 
 export default function RootLayout({
@@ -25,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="th"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
