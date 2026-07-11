@@ -69,7 +69,7 @@ export function KeycapPreview({
             }`}
             style={{ backgroundColor: layers.capHex }}
             aria-pressed={selected}
-            title="Cap / Lid / Legend"
+            title="ฐาน / ฝา / ตัวอักษร"
           >
             <span
               className="keycap-lid absolute inset-[8px] flex items-center justify-center rounded-[10px] border border-black/10"

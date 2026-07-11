@@ -34,22 +34,22 @@ export function LegendPicker({
       }`}
     >
       <div>
-        <h2 className="text-sm font-semibold text-neutral-900">Legend</h2>
+        <h2 className="text-sm font-semibold text-neutral-900">ตัวอักษร/ไอคอน</h2>
         <p className="mt-0.5 text-xs text-neutral-500">
           {disabled
-            ? "Select a key on the canvas first"
-            : "Tap a character or icon to apply"}
+            ? "เลือกคีย์บนแคนวาสก่อน"
+            : "แตะตัวอักษรหรือไอคอนเพื่อใส่"}
         </p>
       </div>
 
       <div className="flex flex-col gap-2">
         <span className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-          Blank
+          ว่าง
         </span>
         <button
           type="button"
-          title="Blank"
-          aria-label="Blank"
+          title="ว่าง"
+          aria-label="ว่าง"
           aria-pressed={blankSelected}
           disabled={disabled}
           className={tileClass(blankSelected, disabled)}
@@ -61,12 +61,12 @@ export function LegendPicker({
 
       <div className="flex min-h-0 flex-1 flex-col gap-2">
         <span className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-          Characters
+          ตัวอักษร
         </span>
         <div
           className="grid grid-cols-6 gap-1.5 overflow-y-auto pr-1"
           role="listbox"
-          aria-label="Characters"
+          aria-label="ตัวอักษร"
         >
           {CHAR_LEGENDS.map((c) => {
             const selected = legendType === "char" && legendValue === c
@@ -76,7 +76,7 @@ export function LegendPicker({
                 type="button"
                 role="option"
                 aria-selected={selected}
-                aria-label={`Character ${c}`}
+                aria-label={`ตัวอักษร ${c}`}
                 title={c}
                 disabled={disabled}
                 className={tileClass(selected, disabled)}
@@ -91,12 +91,12 @@ export function LegendPicker({
 
       <div className="flex min-h-0 flex-1 flex-col gap-2 border-t border-neutral-100 pt-3">
         <span className="text-xs font-medium uppercase tracking-wide text-neutral-500">
-          Icons
+          ไอคอน
         </span>
         <div
           className="grid grid-cols-5 gap-1.5 overflow-y-auto pr-1"
           role="listbox"
-          aria-label="Icons"
+          aria-label="ไอคอน"
         >
           {KEYCAP_ICONS.map((icon) => {
             const selected = legendType === "icon" && legendValue === icon.id
