@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest"
+import { resolveFilamentHex } from "@/lib/filaments"
 import { buildSetSvg } from "@/lib/svg"
 import type { Keycap } from "@/lib/types"
+
+const redHex = resolveFilamentHex("pla-red")
+const blackHex = resolveFilamentHex("pla-black")
 
 const keys: Keycap[] = [
   {
@@ -28,7 +32,7 @@ describe("buildSetSvg", () => {
     expect(svg).toContain("</svg>")
     expect((svg.match(/<rect/g) ?? []).length).toBeGreaterThanOrEqual(4)
     expect(svg).toContain(">A</text>")
-    expect(svg).toContain("#C62828")
+    expect(svg).toContain(redHex)
   })
 
   it("draws Cap A / Lid B / Legend A in two-color mode", () => {
@@ -48,10 +52,12 @@ describe("buildSetSvg", () => {
       },
     )
     // Cap red, lid black, legend red (same as cap)
-    expect(svg).toContain('fill="#C62828"')
-    expect(svg).toContain('fill="#1A1A1A"')
+    expect(svg).toContain(`fill="${redHex}"`)
+    expect(svg).toContain(`fill="${blackHex}"`)
     expect(svg).toContain(">X</text>")
-    expect(svg).toMatch(/fill="#C62828"[^>]*>X<\/text>|fill="#C62828"/)
+    expect(svg).toMatch(
+      new RegExp(`fill="${redHex}"[^>]*>X</text>|fill="${redHex}"`),
+    )
   })
 
   it("returns empty-set friendly svg for no keys", () => {
