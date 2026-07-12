@@ -1,5 +1,5 @@
 import { buildSetSvg } from "@/lib/svg"
-import type { ColorMode, Keycap } from "@/lib/types"
+import type { CanvasOrientation, ColorMode, Keycap } from "@/lib/types"
 
 function downloadBlob(filename: string, blob: Blob) {
   const url = URL.createObjectURL(blob)
@@ -14,26 +14,43 @@ type ExportOptions = {
   mode: ColorMode
   colorAId: string
   colorBId: string | null
+  legendColorId?: string | null
+  orientation?: CanvasOrientation
+}
+
+/** e.g. keycaps J,I,N → "keycap-JIN"; empty legends → "keycap-set" */
+export function buildExportBasename(keycaps: Keycap[]): string {
+  const name = keycaps
+    .map((key) =>
+      key.legendType === "char" && key.legendValue ? key.legendValue : "",
+    )
+    .join("")
+    .replace(/[^A-Za-z0-9]/g, "")
+  return name.length > 0 ? `keycap-${name}` : "keycap-set"
 }
 
 export function downloadSetSvg(
   keycaps: Keycap[],
   options: ExportOptions,
-  filename = "keycap-set.svg",
+  filename?: string,
 ) {
   const svg = buildSetSvg(keycaps, options)
-  downloadBlob(filename, new Blob([svg], { type: "image/svg+xml;charset=utf-8" }))
+  downloadBlob(
+    filename ?? `${buildExportBasename(keycaps)}.svg`,
+    new Blob([svg], { type: "image/svg+xml;charset=utf-8" }),
+  )
 }
 
 export async function downloadSetPng(
   keycaps: Keycap[],
   options: ExportOptions,
-  filename = "keycap-set.png",
+  filename?: string,
   scale = 2,
 ): Promise<void> {
   const svg = buildSetSvg(keycaps, options)
   const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" })
   const url = URL.createObjectURL(blob)
+  const outName = filename ?? `${buildExportBasename(keycaps)}.png`
   try {
     const img = new Image()
     await new Promise<void>((resolve, reject) => {
@@ -54,7 +71,7 @@ export async function downloadSetPng(
         "image/png",
       )
     })
-    downloadBlob(filename, pngBlob)
+    downloadBlob(outName, pngBlob)
   } finally {
     URL.revokeObjectURL(url)
   }

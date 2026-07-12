@@ -62,10 +62,32 @@ describe("resolveKeycapLayers", () => {
     })
   })
 
-  it("uses same filament for cap/lid and contrast legend in one-color mode", () => {
-    const layers = resolveKeycapLayers("one", "pla-black", "pla-black", null)
-    expect(layers.capHex).toBe("#1A1A1A")
-    expect(layers.lidHex).toBe("#1A1A1A")
-    expect(layers.legendHex).toBe("#FFFFFF")
+  it("uses Cap A / Lid B / Legend A in one-color mode", () => {
+    const a = FILAMENTS.find((f) => f.id === "pla-black")!
+    const b = FILAMENTS.find((f) => f.id === "pla-white")!
+    const layers = resolveKeycapLayers("one", "ignored", a.id, b.id)
+    expect(layers).toEqual({
+      capHex: a.hex,
+      lidHex: b.hex,
+      legendHex: a.hex,
+    })
+  })
+
+  it("falls back lid to A when B is unset in one-color mode", () => {
+    const a = FILAMENTS.find((f) => f.id === "pla-black")!
+    const layers = resolveKeycapLayers("one", "ignored", a.id, null)
+    expect(layers).toEqual({
+      capHex: a.hex,
+      lidHex: a.hex,
+      legendHex: a.hex,
+    })
+  })
+
+  it("uses override legend color when set", () => {
+    const a = FILAMENTS.find((f) => f.id === "pla-black")!
+    const legend = FILAMENTS.find((f) => f.id === "pla-white")!
+    const layers = resolveKeycapLayers("one", "ignored", a.id, null, legend.id)
+    expect(layers.legendHex).toBe(legend.hex)
+    expect(layers.capHex).toBe(a.hex)
   })
 })

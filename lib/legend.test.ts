@@ -33,7 +33,7 @@ describe("isValidLegend", () => {
   it("requires matching type and value", () => {
     expect(isValidLegend("char", "B")).toBe(true)
     expect(isValidLegend("char", "b")).toBe(false)
-    expect(isValidLegend("icon", "ArrowUp")).toBe(true)
+    expect(isValidLegend("icon", "PawPrint")).toBe(true)
     expect(isValidLegend("icon", "")).toBe(false)
     expect(isValidLegend("char", null)).toBe(false)
   })

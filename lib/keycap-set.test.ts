@@ -13,6 +13,8 @@ describe("createInitialSetState", () => {
     expect(state.mode).toBe("one")
     expect(state.colorAId).toBe(FILAMENTS[0].id)
     expect(state.colorBId).toBe(FILAMENTS[1].id)
+    expect(state.legendColorId).toBeNull()
+    expect(state.orientation).toBe("horizontal")
     expect(state.keycaps).toHaveLength(1)
     expect(state.keycaps[0].legendType).toBeNull()
     expect(state.selectedKeycapId).toBe(state.keycaps[0].id)

@@ -31,7 +31,8 @@ describe("buildSetSvg", () => {
     expect(svg.startsWith("<svg")).toBe(true)
     expect(svg).toContain("</svg>")
     expect((svg.match(/<rect/g) ?? []).length).toBeGreaterThanOrEqual(4)
-    expect(svg).toContain(">A</text>")
+    expect(svg).toContain("<image href=\"data:image/png;base64,")
+    expect(svg).toContain('filter="url(#recolor-0)"')
     expect(svg).toContain(redHex)
   })
 
@@ -51,13 +52,12 @@ describe("buildSetSvg", () => {
         colorBId: "pla-black",
       },
     )
-    // Cap red, lid black, legend red (same as cap)
+    // Cap red, lid black, legend red (same as cap) via recolor filter
     expect(svg).toContain(`fill="${redHex}"`)
     expect(svg).toContain(`fill="${blackHex}"`)
-    expect(svg).toContain(">X</text>")
-    expect(svg).toMatch(
-      new RegExp(`fill="${redHex}"[^>]*>X</text>|fill="${redHex}"`),
-    )
+    expect(svg).toContain("<image href=\"data:image/png;base64,")
+    expect(svg).toContain('id="recolor-0"')
+    expect(svg).toMatch(/0 0 0 0 0\.\d+/) // feColorMatrix RGB channels
   })
 
   it("returns empty-set friendly svg for no keys", () => {
@@ -80,5 +80,27 @@ describe("buildSetSvg", () => {
     expect(svg).toContain('id="capHighlight"')
     expect(svg).toContain('fill="url(#wood)"')
     expect(svg).toContain('filter="url(#keyShadow)"')
+  })
+
+  it("lays out vertical orientation as a single column", () => {
+    const svg = buildSetSvg(keys, {
+      mode: "one",
+      colorAId: "pla-red",
+      colorBId: "pla-black",
+      orientation: "vertical",
+    })
+    expect(svg).toContain('width="104"')
+    expect(svg).toContain('height="190"')
+  })
+
+  it("lays out horizontal orientation in a row", () => {
+    const svg = buildSetSvg(keys, {
+      mode: "one",
+      colorAId: "pla-red",
+      colorBId: "pla-black",
+      orientation: "horizontal",
+    })
+    expect(svg).toContain('width="190"')
+    expect(svg).toContain('height="104"')
   })
 })

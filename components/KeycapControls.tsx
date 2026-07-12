@@ -1,9 +1,11 @@
 "use client"
 
-import type { Dispatch, SetStateAction } from "react"
+import { useState, type Dispatch, type SetStateAction } from "react"
 import { FilamentPicker } from "@/components/FilamentPicker"
 import { reapplyAlternateColors } from "@/lib/colors"
 import { downloadSetPng, downloadSetSvg } from "@/lib/export"
+import { defaultBlackLegendColorId, defaultLegendColorId } from "@/lib/filaments"
+import { buildOrderUrl, summarizeOrder } from "@/lib/share"
 import type { ColorMode, SetState } from "@/lib/types"
 
 type Props = {
@@ -21,14 +23,31 @@ export function KeycapControls({
   onRemove,
   onClear,
 }: Props) {
-  const selected =
-    state.keycaps.find((k) => k.id === state.selectedKeycapId) ?? null
-  const canReapply = state.mode === "two" && Boolean(state.colorBId)
+  const [copyStatus, setCopyStatus] = useState<"idle" | "ok" | "err">("idle")
   const canExport = state.keycaps.length > 0
   const exportOptions = {
     mode: state.mode,
     colorAId: state.colorAId,
     colorBId: state.colorBId,
+    legendColorId: state.legendColorId,
+    orientation: state.orientation,
+  }
+  const orderSummary = summarizeOrder(state)
+
+  async function copyOrderLink() {
+    try {
+      const url = buildOrderUrl(
+        window.location.origin,
+        window.location.pathname,
+        state,
+      )
+      await navigator.clipboard.writeText(url)
+      setCopyStatus("ok")
+      window.setTimeout(() => setCopyStatus("idle"), 2000)
+    } catch {
+      setCopyStatus("err")
+      window.setTimeout(() => setCopyStatus("idle"), 2500)
+    }
   }
 
   function setMode(mode: ColorMode) {
@@ -45,7 +64,7 @@ export function KeycapControls({
   }
 
   return (
-    <div className="flex h-full flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-4">
+    <div className="flex min-h-full flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-4">
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
@@ -85,108 +104,152 @@ export function KeycapControls({
       </div>
 
       <FilamentPicker
-        label="สี A · ฐาน + ตัวอักษร"
+        label={
+          state.legendColorId
+            ? "สี A · ฐาน"
+            : "สี A · ฐาน + ตัวอักษร"
+        }
         value={state.colorAId}
         onChange={(colorAId) =>
           setState((s) => {
+            const legendColorId =
+              s.legendColorId && s.legendColorId === colorAId
+                ? null
+                : s.legendColorId
             if (s.mode === "two" && s.colorBId) {
               return {
                 ...s,
                 colorAId,
+                legendColorId,
                 keycaps: reapplyAlternateColors(s.keycaps, colorAId, s.colorBId),
               }
             }
             return {
               ...s,
               colorAId,
+              legendColorId,
               keycaps: s.keycaps.map((k) => ({ ...k, colorId: colorAId })),
             }
           })
         }
       />
-      <FilamentPicker
-        label="สี B · ฝา"
-        value={state.colorBId ?? ""}
-        disabled={state.mode !== "two"}
-        onChange={(colorBId) =>
-          setState((s) => {
-            if (s.mode === "two") {
-              return {
+
+      {state.mode === "one" ? (
+        <FilamentPicker
+          label="สีฝา"
+          value={state.colorBId ?? ""}
+          onChange={(colorBId) => setState((s) => ({ ...s, colorBId }))}
+        />
+      ) : (
+        <>
+          <FilamentPicker
+            label="สี B · ฝา"
+            value={state.colorBId ?? ""}
+            onChange={(colorBId) =>
+              setState((s) => ({
                 ...s,
                 colorBId,
                 keycaps: reapplyAlternateColors(s.keycaps, s.colorAId, colorBId),
-              }
-            }
-            return { ...s, colorBId }
-          })
-        }
-      />
-
-      {state.mode === "two" && (
-        <p className="rounded-lg bg-neutral-50 px-3 py-2 text-xs text-neutral-600">
-          3 ชั้น: ฐาน A → ฝา B → ตัวอักษร A สลับเมื่อฐานเป็น B สีต่อคีย์ถูกล็อก
-        </p>
-      )}
-
-      <button
-        type="button"
-        className="btn btn-secondary disabled:opacity-40"
-        disabled={state.mode !== "two" || !state.colorBId}
-        onClick={() => {
-          if (!state.colorBId) return
-          setState((s) => {
-            if (!s.colorBId) return s
-            const colorAId = s.colorBId
-            const colorBId = s.colorAId
-            return {
-              ...s,
-              colorAId,
-              colorBId,
-              keycaps: reapplyAlternateColors(s.keycaps, colorAId, colorBId),
-            }
-          })
-        }}
-      >
-        สลับ A ↔ B
-      </button>
-
-      <button
-        type="button"
-        className="btn btn-accent text-left disabled:opacity-40"
-        disabled={!canReapply}
-        onClick={() => {
-          if (!state.colorBId) return
-          setState((s) => ({
-            ...s,
-            keycaps: reapplyAlternateColors(s.keycaps, s.colorAId, s.colorBId!),
-          }))
-        }}
-      >
-        จัดสีสลับใหม่
-        <span className="mt-0.5 block text-xs font-normal opacity-80">
-          สีฐานเรียงตามลำดับ A/B
-        </span>
-      </button>
-
-      {selected && state.mode === "one" && (
-        <div className="flex flex-col gap-2 border-t border-neutral-100 pt-3">
-          <p className="text-sm font-medium text-neutral-700">คีย์ที่เลือก</p>
-          <FilamentPicker
-            label="สีคีย์"
-            value={selected.colorId}
-            onChange={(colorId) =>
-              setState((s) => ({
-                ...s,
-                keycaps: s.keycaps.map((k) =>
-                  k.id === selected.id ? { ...k, colorId } : k,
-                ),
               }))
             }
           />
-        </div>
+
+          <button
+            type="button"
+            className="btn btn-secondary disabled:opacity-40"
+            disabled={!state.colorBId}
+            onClick={() => {
+              if (!state.colorBId) return
+              setState((s) => {
+                if (!s.colorBId) return s
+                const colorAId = s.colorBId
+                const colorBId = s.colorAId
+                return {
+                  ...s,
+                  colorAId,
+                  colorBId,
+                  legendColorId:
+                    s.legendColorId && s.legendColorId === colorAId
+                      ? null
+                      : s.legendColorId,
+                  keycaps: reapplyAlternateColors(s.keycaps, colorAId, colorBId),
+                }
+              })
+            }}
+          >
+            สลับ A ↔ B
+          </button>
+        </>
+      )}
+
+      {state.legendColorId ? (
+        <>
+          <FilamentPicker
+            label="สี key · ตัวอักษร/ไอคอน"
+            value={state.legendColorId}
+            onChange={(legendColorId) =>
+              setState((s) => ({
+                ...s,
+                legendColorId:
+                  legendColorId === s.colorAId ? null : legendColorId,
+              }))
+            }
+          />
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              className="btn btn-export disabled:opacity-40"
+              disabled={state.colorAId === defaultBlackLegendColorId()}
+              onClick={() =>
+                setState((s) => {
+                  const blackId = defaultBlackLegendColorId()
+                  return {
+                    ...s,
+                    legendColorId: blackId === s.colorAId ? null : blackId,
+                  }
+                })
+              }
+            >
+              Default
+            </button>
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={() => setState((s) => ({ ...s, legendColorId: null }))}
+            >
+              ลบสี key
+            </button>
+          </div>
+        </>
+      ) : (
+        <button
+          type="button"
+          className="btn btn-export"
+          onClick={() =>
+            setState((s) => ({
+              ...s,
+              legendColorId: defaultLegendColorId(s.colorAId),
+            }))
+          }
+        >
+          เพิ่มสี key ใหม่
+        </button>
       )}
 
       <div className="mt-auto flex flex-col gap-2 border-t border-neutral-100 pt-3">
+        <button
+          type="button"
+          className="btn btn-accent disabled:opacity-40"
+          disabled={!canExport}
+          onClick={() => void copyOrderLink()}
+        >
+          {copyStatus === "ok"
+            ? "คัดลอกลิงก์แล้ว"
+            : copyStatus === "err"
+              ? "คัดลอกไม่สำเร็จ"
+              : "คัดลอกลิงก์ออเดอร์"}
+        </button>
+        <p className="text-xs text-neutral-500">{orderSummary}</p>
         <button
           type="button"
           className="btn btn-export disabled:opacity-40"

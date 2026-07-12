@@ -55,30 +55,37 @@ export type KeycapLayerColors = {
 
 /**
  * Two-color: Cap A → Lid B → Legend A (and Cap B → Lid A → Legend B).
- * One-color: Cap + Lid same filament; legend auto-contrasts on the lid.
+ * One-color: Cap + default Legend = A; Lid = B (falls back to A if B unset).
+ * Optional legendColorId overrides legend ink for the whole set.
  */
 export function resolveKeycapLayers(
   mode: ColorMode,
   capColorId: string,
   colorAId: string,
   colorBId: string | null,
+  legendColorId: string | null = null,
 ): KeycapLayerColors {
-  const capHex = resolveFilamentHex(capColorId)
-
   if (mode === "two" && colorBId) {
+    const capHex = resolveFilamentHex(capColorId)
     const lidHex = resolveFilamentHex(
       oppositeColorId(capColorId, colorAId, colorBId),
     )
     return {
       capHex,
       lidHex,
-      legendHex: capHex,
+      legendHex: legendColorId
+        ? resolveFilamentHex(legendColorId)
+        : capHex,
     }
   }
 
+  const capHex = resolveFilamentHex(colorAId)
+  const lidHex = resolveFilamentHex(colorBId ?? colorAId)
   return {
     capHex,
-    lidHex: capHex,
-    legendHex: legendInkForHex(capHex),
+    lidHex,
+    legendHex: legendColorId
+      ? resolveFilamentHex(legendColorId)
+      : capHex,
   }
 }

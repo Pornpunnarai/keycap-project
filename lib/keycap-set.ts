@@ -29,6 +29,8 @@ export function createInitialSetState(): SetState {
     mode: "one",
     colorAId,
     colorBId: defaultColorBId(),
+    legendColorId: null,
+    orientation: "horizontal",
     keycaps: [key],
     selectedKeycapId: key.id,
   }

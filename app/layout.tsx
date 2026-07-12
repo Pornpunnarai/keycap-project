@@ -1,33 +1,37 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from "next"
+import { Baloo_2, Mitr } from "next/font/google"
+import "./globals.css"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const mitr = Mitr({
+  variable: "--font-app",
+  subsets: ["thai", "latin"],
+  weight: ["300", "400", "500", "600", "700"],
+})
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const legendFont = Baloo_2({
+  variable: "--font-legend",
   subsets: ["latin"],
-});
+  weight: ["600", "700", "800"],
+})
 
 export const metadata: Metadata = {
   title: "ตัวจัดชุดคีย์แคป",
   description: "จัดชุดคีย์แคปจากสีเส้นใยและตัวอักษรหรือไอคอน",
-};
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html
       lang="th"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${mitr.variable} ${legendFont.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className={`${mitr.className} flex min-h-full flex-col`}>
+        {children}
+      </body>
     </html>
-  );
+  )
 }
